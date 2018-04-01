@@ -20,7 +20,17 @@ class BooksApp extends Component {
     });
   }
 
-  // TODO: Implement function to update books via the Books API
+  updateBook = (book, shelf) => {
+    BooksAPI.update(book, shelf);
+
+    book.shelf = shelf;
+
+    this.setState((prevState) => ({
+      books: prevState.books.map((prevBook) => (
+        book.id === prevBook.id ? book : prevBook
+      ))
+    }));
+  };
 
   // TODO: Implement function to search for books via the Books API
 
@@ -30,7 +40,7 @@ class BooksApp extends Component {
     return (
       <div className='app'>
         <Route exact path='/' render={() => (
-          <ListBooks books={books} />
+          <ListBooks books={books} updateBook={this.updateBook} />
         )} />
 
         <Route exact path='/search' render={() => (

@@ -5,16 +5,19 @@ import Book from './Book';
 
 class BooksGrid extends Component {
   static PropTypes = {
-    books: PropTypes.array.isRequired
+    books: PropTypes.array.isRequired,
+    updateBook: PropTypes.func.isRequired
   };
 
   render() {
+    const { books, updateBook } = this.props;
+
     return (
       <ol className='books-grid'>
         {
-          this.props.books.map((book) => (
+          books.map((book) => (
             <li key={book.id}>
-              <Book book={book} />
+              <Book book={book} updateBook={updateBook} />
             </li>
           ))
         }

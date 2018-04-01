@@ -6,7 +6,8 @@ import Bookshelf from './Bookshelf';
 
 class ListBooks extends Component {
   static PropTypes = {
-    books: PropTypes.array.isRequired
+    books: PropTypes.array.isRequired,
+    updateBook: PropTypes.func.isRequired
   };
 
   booksOnShelf = (shelf) => {
@@ -14,6 +15,8 @@ class ListBooks extends Component {
   };
 
   render() {
+    const { updateBook } = this.props;
+
     return (
       <div className='list-books'>
         <div className='list-books-title'>
@@ -24,16 +27,19 @@ class ListBooks extends Component {
           <Bookshelf
             books={this.booksOnShelf('currentlyReading')}
             title={'Currently Reading'}
+            updateBook={updateBook}
           />
 
           <Bookshelf
             books={this.booksOnShelf('wantToRead')}
             title={'Want to Read'}
+            updateBook={updateBook}
           />
 
           <Bookshelf
             books={this.booksOnShelf('read')}
             title={'Read'}
+            updateBook={updateBook}
           />
         </div>
 

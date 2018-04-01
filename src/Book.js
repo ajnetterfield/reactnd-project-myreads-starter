@@ -3,15 +3,13 @@ import React, { Component } from 'react';
 
 class Book extends Component {
   static PropTypes = {
-    book: PropTypes.object.isRequired
-  };
-
-  updateBook = (shelf) => {
-    // TODO: Update this book via the Books API
+    book: PropTypes.object.isRequired,
+    updateBook: PropTypes.func.isRequired
   };
 
   render() {
-    const { authors, imageLinks, shelf, title } = this.props.book;
+    const { book, updateBook } = this.props;
+    const { authors, imageLinks, shelf, title } = book;
 
     // TODO: Set height and width to match the size of the image
     const style = {
@@ -26,7 +24,7 @@ class Book extends Component {
           <div className='book-cover' style={style}></div>
 
           <div className='book-shelf-changer'>
-            <select value={shelf} onChange={(e) => this.updateBook(e.target.value)}>
+            <select value={shelf} onChange={(e) => updateBook(book, e.target.value)}>
               <option value='none' disabled>Move to...</option>
               <option value='currentlyReading'>Currently Reading</option>
               <option value='wantToRead'>Want to Read</option>
