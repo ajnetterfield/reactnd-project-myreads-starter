@@ -9,27 +9,23 @@ class Book extends Component {
 
   render() {
     const { book, updateBook } = this.props;
-    const { authors, imageLinks, title } = book;
+    const { authors, imageLinks, shelf, title } = book;
 
-    const shelf = book.shelf || 'none';
-
-    // TODO: Set height and width to match the size of the image
-    const hasCoverImage = imageLinks !== undefined;
+    const hasCoverImage = imageLinks && imageLinks.thumbnail;
     const coverImage = hasCoverImage ? `url(${imageLinks.thumbnail})` : '';
 
     return (
       <div className='book'>
         <div className='book-top'>
-          <div className='book-cover' style={{ backgroundImage: coverImage, height: 192, width: 128 }}>
-            {!hasCoverImage && (
-              <div style={{ color: '#999', lineHeight: '192px', textAlign: 'center' }}>
-                No Cover
-              </div>
-            )}
+          <div className='book-cover' style={{ backgroundImage: coverImage }}>
+            {!hasCoverImage && <div className='book-cover-none'>No Cover</div>}
           </div>
 
           <div className='book-shelf-changer'>
-            <select value={shelf} onChange={(e) => updateBook(book, e.target.value)}>
+            <select
+              value={shelf || 'none'}
+              onChange={(e) => updateBook(book, e.target.value)}
+            >
               <option value='none' disabled>Move to...</option>
               <option value='currentlyReading'>Currently Reading</option>
               <option value='wantToRead'>Want to Read</option>
@@ -39,8 +35,8 @@ class Book extends Component {
           </div>
         </div>
 
-        <div className='book-title'>{title}</div>
-        <div className='book-authors'>{authors}</div>
+        <div className='book-title'>{title || 'No Title'}</div>
+        <div className='book-authors'>{authors || 'No Author'}</div>
       </div>
     );
   }

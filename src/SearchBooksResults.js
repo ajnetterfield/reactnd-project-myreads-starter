@@ -23,7 +23,7 @@ class SearchBooksResults extends Component {
     return (
       <div className='search-books-results'>
         {searchQuery && (
-          <span>Found {foundBooks.length} results for "{searchQuery}"</span>
+          <div>Found {foundBooks.length} results for "{searchQuery}"</div>
         )}
 
         <BooksGrid books={foundBooks} updateBook={updateBook} />
