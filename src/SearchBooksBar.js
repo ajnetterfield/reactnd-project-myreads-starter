@@ -1,18 +1,23 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
 class SearchBooksBar extends Component {
-  updateQuery = (query) => {
-    this.setState(() => ({
-      query: query.trim()
-    }));
-
-    // TODO: Search for books via the Books API
-  }
+  static propTypes = {
+    searchBooks: PropTypes.func.isRequired
+  };
 
   state = {
     query: ''
   };
+
+  updateQuery = (query) => {
+    this.setState(() => ({
+      query
+    }));
+
+    this.props.searchBooks(query);
+  }
 
   render() {
     return (

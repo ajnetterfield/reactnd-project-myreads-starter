@@ -5,13 +5,21 @@ import BooksGrid from './BooksGrid';
 
 class SearchBooksResults extends Component {
   static PropTypes = {
-    books: PropTypes.array.isRequired
+    searchQuery: PropTypes.string,
+    searchResults: PropTypes.array.isRequired,
+    updateBook: PropTypes.func.isRequired
   };
 
   render() {
+    const { searchQuery, searchResults, updateBook } = this.props;
+
     return (
       <div className='search-books-results'>
-        <BooksGrid books={this.props.books} />
+        {searchQuery && (
+          <span>Found {searchResults.length} results for "{searchQuery}"</span>
+        )}
+
+        <BooksGrid books={searchResults} updateBook={updateBook} />
       </div>
     );
   }

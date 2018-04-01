@@ -9,19 +9,24 @@ class Book extends Component {
 
   render() {
     const { book, updateBook } = this.props;
-    const { authors, imageLinks, shelf, title } = book;
+    const { authors, imageLinks, title } = book;
+
+    const shelf = book.shelf || 'none';
 
     // TODO: Set height and width to match the size of the image
-    const style = {
-      backgroundImage: `url(${imageLinks.thumbnail})`,
-      height: 192,
-      width: 128
-    }
+    const hasCoverImage = imageLinks !== undefined;
+    const coverImage = hasCoverImage ? `url(${imageLinks.thumbnail})` : '';
 
     return (
       <div className='book'>
         <div className='book-top'>
-          <div className='book-cover' style={style}></div>
+          <div className='book-cover' style={{ backgroundImage: coverImage, height: 192, width: 128 }}>
+            {!hasCoverImage && (
+              <div style={{ color: '#999', lineHeight: '192px', textAlign: 'center' }}>
+                No Cover
+              </div>
+            )}
+          </div>
 
           <div className='book-shelf-changer'>
             <select value={shelf} onChange={(e) => updateBook(book, e.target.value)}>

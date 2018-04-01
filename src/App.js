@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { debounce } from 'underscore';
 import { Route } from 'react-router-dom';
 
 import * as BooksAPI from './BooksAPI';
@@ -9,7 +10,9 @@ import './App.css';
 
 class BooksApp extends Component {
   state = {
-    books: []
+    books: [],
+    searchQuery: '',
+    searchResults: []
   };
 
   componentDidMount() {
@@ -25,6 +28,7 @@ class BooksApp extends Component {
 
     book.shelf = shelf;
 
+    // TODO: Handle new books added to shelves from search page
     this.setState((prevState) => ({
       books: prevState.books.map((prevBook) => (
         book.id === prevBook.id ? book : prevBook
@@ -32,10 +36,33 @@ class BooksApp extends Component {
     }));
   };
 
-  // TODO: Implement function to search for books via the Books API
+  searchBooks = debounce((query) => {
+    query = query.trim();
+
+    if (query === '') {
+      this.setState(() => ({
+        searchQuery: '',
+        searchResults: []
+      }));
+    } else {
+      BooksAPI.search(query).then((searchResults) => {
+        if (searchResults.error) {
+          this.setState(() => ({
+            searchQuery: query,
+            searchResults: []
+          }));
+        } else {
+          this.setState(() => ({
+            searchQuery: query,
+            searchResults
+          }));
+        }
+      });
+    }
+  }, 200);
 
   render() {
-    const { books } = this.state;
+    const { books, searchQuery, searchResults } = this.state;
 
     return (
       <div className='app'>
@@ -44,7 +71,12 @@ class BooksApp extends Component {
         )} />
 
         <Route exact path='/search' render={() => (
-          <SearchBooks books={books} />
+          <SearchBooks
+            searchBooks={this.searchBooks}
+            searchQuery={searchQuery}
+            searchResults={searchResults}
+            updateBook={this.updateBook}
+          />
         )} />
       </div>
     )
