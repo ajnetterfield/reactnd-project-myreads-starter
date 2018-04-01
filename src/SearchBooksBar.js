@@ -4,11 +4,12 @@ import { Link } from 'react-router-dom';
 
 class SearchBooksBar extends Component {
   static propTypes = {
-    searchBooks: PropTypes.func.isRequired
+    searchBooks: PropTypes.func.isRequired,
+    searchQuery: PropTypes.string.isRequired
   };
 
   state = {
-    query: ''
+    query: this.props.searchQuery
   };
 
   updateQuery = (query) => {

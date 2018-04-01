@@ -11,8 +11,8 @@ import './App.css';
 class BooksApp extends Component {
   state = {
     books: [],
-    searchQuery: '',
-    searchResults: []
+    foundBookIds: [],
+    searchQuery: ''
   };
 
   componentDidMount() {
@@ -28,11 +28,8 @@ class BooksApp extends Component {
 
     book.shelf = shelf;
 
-    // TODO: Handle new books added to shelves from search page
     this.setState((prevState) => ({
-      books: prevState.books.map((prevBook) => (
-        book.id === prevBook.id ? book : prevBook
-      ))
+      books: prevState.books.filter((x) => x.id !== book.id).concat(book)
     }));
   };
 
@@ -41,28 +38,41 @@ class BooksApp extends Component {
 
     if (query === '') {
       this.setState(() => ({
-        searchQuery: '',
-        searchResults: []
+        foundBookIds: [],
+        searchQuery: ''
       }));
     } else {
       BooksAPI.search(query).then((searchResults) => {
         if (searchResults.error) {
           this.setState(() => ({
-            searchQuery: query,
-            searchResults: []
+            foundBookIds: [],
+            searchQuery: query
           }));
         } else {
-          this.setState(() => ({
-            searchQuery: query,
-            searchResults
-          }));
+          this.setState((prevState) => {
+            let newBooks = [];
+
+            searchResults.forEach((searchResult) => {
+              const index = prevState.books.findIndex((book) => (
+                book.id === searchResult.id
+              ));
+
+              if (index === -1) newBooks.push(searchResult);
+            });
+
+            return {
+              books: prevState.books.concat(newBooks),
+              foundBookIds: searchResults.map((book) => book.id),
+              searchQuery: query
+            };
+          });
         }
       });
     }
   }, 200);
 
   render() {
-    const { books, searchQuery, searchResults } = this.state;
+    const { books, foundBookIds, searchQuery } = this.state;
 
     return (
       <div className='app'>
@@ -72,9 +82,10 @@ class BooksApp extends Component {
 
         <Route exact path='/search' render={() => (
           <SearchBooks
+            books={books}
+            foundBookIds={foundBookIds}
             searchBooks={this.searchBooks}
             searchQuery={searchQuery}
-            searchResults={searchResults}
             updateBook={this.updateBook}
           />
         )} />

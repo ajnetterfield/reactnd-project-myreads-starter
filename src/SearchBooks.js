@@ -6,22 +6,24 @@ import SearchBooksResults from './SearchBooksResults';
 
 class SearchBooks extends Component {
   static propTypes = {
+    books: PropTypes.array.isRequired,
+    foundBookIds: PropTypes.array.isRequired,
     searchBooks: PropTypes.func.isRequired,
     searchQuery: PropTypes.string,
-    searchResults: PropTypes.array.isRequired,
     updateBook: PropTypes.func.isRequired
   };
 
   render() {
-    const { searchBooks, searchQuery, searchResults, updateBook } = this.props;
+    const { books, searchBooks, searchQuery, foundBookIds, updateBook } = this.props;
 
     return (
       <div className='search-books'>
-        <SearchBooksBar searchBooks={searchBooks} />
+        <SearchBooksBar searchBooks={searchBooks} searchQuery={searchQuery} />
 
         <SearchBooksResults
+          books={books}
+          foundBookIds={foundBookIds}
           searchQuery={searchQuery}
-          searchResults={searchResults}
           updateBook={updateBook}
         />
       </div>

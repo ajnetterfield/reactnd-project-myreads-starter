@@ -5,21 +5,28 @@ import BooksGrid from './BooksGrid';
 
 class SearchBooksResults extends Component {
   static PropTypes = {
+    foundBookIds: PropTypes.array.isRequired,
     searchQuery: PropTypes.string,
-    searchResults: PropTypes.array.isRequired,
     updateBook: PropTypes.func.isRequired
   };
 
   render() {
-    const { searchQuery, searchResults, updateBook } = this.props;
+    const { books, foundBookIds, searchQuery, updateBook } = this.props;
+
+    let foundBooks = [];
+
+    foundBookIds.forEach((bookId) => {
+      const foundBook = books.find((book) => book.id === bookId);
+      if (foundBook) foundBooks.push(foundBook);
+    });
 
     return (
       <div className='search-books-results'>
         {searchQuery && (
-          <span>Found {searchResults.length} results for "{searchQuery}"</span>
+          <span>Found {foundBooks.length} results for "{searchQuery}"</span>
         )}
 
-        <BooksGrid books={searchResults} updateBook={updateBook} />
+        <BooksGrid books={foundBooks} updateBook={updateBook} />
       </div>
     );
   }
